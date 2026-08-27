@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2f5597">
+<title>Espen og Ivans treningsdagbok</title>
+<style>
+:root{--b:#2f5597;--lb:#d9e2f3;--y:#fff2cc;--g:#e2f0d9;--gr:#e7e6e6;--line:#c8d2e2;--bg:#f5f7fb}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:#172033}
+header{position:sticky;top:0;z-index:10;background:var(--b);color:white;padding:14px 16px}header h1{font-size:18px;margin:0}
+.wrap{max-width:820px;margin:auto;padding:12px 10px 80px}.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:12px}
+.tab{border:0;border-radius:9px;padding:10px 2px;background:white;font-weight:700;font-size:12px}.tab.active{background:var(--b);color:#fff}
+.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #0001}h2{font-size:18px;margin:0 0 10px}
+.muted{font-size:12px;color:#6b7589}.plan{display:grid;grid-template-columns:58px 1fr auto;gap:8px;padding:9px 0;border-bottom:1px solid #eee;align-items:center}
+.badge{background:var(--lb);border-radius:7px;padding:5px;font-size:12px;font-weight:700;text-align:center}
+label{display:block;font-size:12px;font-weight:700;margin:8px 0 4px}input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+textarea{min-height:64px}.btn{border:0;border-radius:9px;padding:11px 14px;background:var(--b);color:#fff;font-weight:700}.btn.secondary{background:#eef2f8;color:#22314d}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.hidden{display:none!important}.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:650px;font-size:12px}th,td{border:1px solid var(--line);padding:6px;text-align:center}th{background:var(--lb)}th:first-child,td:first-child{text-align:left;min-width:170px}
+.kv{background:var(--gr);font-weight:700;text-align:center}.edit{background:var(--y)}.unitwrap{position:relative}.unit{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;color:#6c7688}.unitinput{padding-right:33px}
+.hist{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:4px;font-size:12px}.hist>div{background:#f8f9fc;padding:7px;border-radius:6px}.hist .h{background:var(--lb);font-weight:700}
+.round{border:1px solid var(--line);border-radius:10px;padding:10px;margin:10px 0}.row3{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:6px;align-items:center;margin-top:7px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#172033;color:#fff;padding:10px 14px;border-radius:9px;opacity:0;transition:.2s}.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header><h1>Espen og Ivans treningsdagbok</h1></header>
+<div class="wrap">
+<div class="tabs">
+<button class="tab active" data-p="home">Start</button><button class="tab" data-p="w1">Økt 1</button><button class="tab" data-p="w2">Økt 2</button><button class="tab" data-p="w3">Økt 3</button><button class="tab" data-p="w4">Økt 4</button>
+</div>
+<section id="home"></section><section id="w1" class="hidden"></section><section id="w2" class="hidden"></section><section id="w3" class="hidden"></section><section id="w4" class="hidden"></section>
+</div><div id="toast" class="toast">Lagret</div>
+<script>
+const KEY="ei_trening_app_v1";
+const ex1=[
+{name:"Markløft",plan:"3 x 12",kind:"weight",reps:[12,12,12]},
+{name:"Bulgarian split",plan:"3 sett – start KV x 6",kind:"kvreps",reps:[6,6,6]},
+{name:"Pullups",plan:"3 x maks",kind:"max",reps:["","",""]},
+{name:"Omvendt flyes med manualer",plan:"3 x 12",kind:"weight",reps:[12,12,12]},
+{name:"Brystpress med manual i skråbenk",plan:"3 x 12",kind:"weight",reps:[12,12,12]},
+{name:"Dips",plan:"3 x maks",kind:"max",reps:["","",""]},
+{name:"Biceps curls med manual",plan:"3 x 12 hver arm",kind:"weight",reps:["12 hver arm","12 hver arm","12 hver arm"]}];
+const ex3=[
+{name:"Sumosquat",plan:"15",kind:"weight",reps:"15"},
+{name:"Sandbag to shoulder",plan:"20 (10 hver side)",kind:"weight",reps:"20"},
+{name:"Armheving",plan:"Maks",kind:"max",reps:""},
+{name:"Mountainclimbers",plan:"20 (10 hver side)",kind:"kv",reps:"20"},
+{name:"Ground to air",plan:"12 hver arm",kind:"weight",reps:"12"},
+{name:"Burpees",plan:"8",kind:"kv",reps:"8"}];
+function seed(){return{w1:[{date:"2026-08-25",ex:{
+"Markløft":{w:[30,30,30],r:[12,12,12]},"Bulgarian split":{w:["KV","KV","KV"],r:[6,6,6]},
+"Pullups":{w:["KV","KV","KV"],r:[5,3,2]},"Omvendt flyes med manualer":{w:[4,4,4],r:[12,12,12]},
+"Brystpress med manual i skråbenk":{w:[10,12.5,12.5],r:[12,12,12]},"Dips":{w:["KV","KV","KV"],r:[12,10,10]},
+"Biceps curls med manual":{w:[6,6,6],r:["12 hver arm","12 hver arm","12 hver arm"]}}}],w2:[],w3:[],w4:[]}}
+let d;try{d=JSON.parse(localStorage.getItem(KEY))||seed()}catch(e){d=seed()}
+const q=s=>document.querySelector(s);const today=()=>new Date().toISOString().slice(0,10);
+function save(){localStorage.setItem(KEY,JSON.stringify(d));renderHome();showToast()}
+function showToast(t="Lagret"){let x=q("#toast");x.textContent=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),1000)}
+function kg(v){if(v===""||v==null)return"-";if(v==="KV")return"KV";return Number(v).toFixed(1).replace(".",",")+"kg"}
+function stk(v){return(v===""||v==null)?"-":v+" stk"}
+function renderHome(){
+let f=d.w1[0],l=d.w1[d.w1.length-1];
+let prog=ex1.map(e=>{let a=f?.ex?.[e.name],b=l?.ex?.[e.name],av="-",bv="-";
+if(a){if(e.kind==="max")av=a.r.map(stk).join(" / ");else if(e.kind==="kvreps")av=a.r.map((x,i)=>kg(a.w[i])+" x "+x+" stk").join(" / ");else av=a.w.map(kg).join(" / ")}
+if(b){if(e.kind==="max")bv=b.r.map(stk).join(" / ");else if(e.kind==="kvreps")bv=b.r.map((x,i)=>kg(b.w[i])+" x "+x+" stk").join(" / ");else bv=b.w.map(kg).join(" / ")}
+return `<div class="hist"><div><b>${e.name}</b><br><span class="muted">${e.plan}</span></div><div>${av}</div><div>${bv}</div></div>`}).join("");
+let f3=d.w3[0],l3=d.w3[d.w3.length-1];
+q("#home").innerHTML=`<div class="card"><h2>Ukeplan</h2>
+<div class="plan"><span class="badge">Økt 1</span><div><b>Styrke 1</b></div><span>${d.w1.length} utført</span></div>
+<div class="plan"><span class="badge">Økt 2</span><div><b>Frivillig jogg/gåtur</b><div class="muted">ca. 45 min</div></div><span>${d.w2.length} utført</span></div>
+<div class="plan"><span class="badge">Økt 3</span><div><b>Styrke 2 – sirkel på tid</b><div class="muted">4 runder, 2 min pause</div></div><span>${d.w3.length} utført</span></div>
+<div class="plan"><span class="badge">Økt 4</span><div><b>Fjelltur/rolig løpetur</b><div class="muted">maks 40 min</div></div><span>${d.w4.length} utført</span></div></div>
+<div class="card"><h2>Økt 1 – progresjon</h2><div class="hist"><div class="h">Øvelse</div><div class="h">Første</div><div class="h">Nå</div></div>${prog}</div>
+<div class="card"><h2>Økt 3 – tid</h2><div class="hist"><div class="h">Måling</div><div class="h">Første</div><div class="h">Nå</div></div>
+<div class="hist"><div><b>Total tid</b></div><div>${f3?.total||"-"}</div><div>${l3?.total||"-"}</div></div></div>
+<div class="card"><h2>Sikkerhetskopi</h2><div class="actions"><button class="btn secondary" onclick="exportData()">Eksporter data</button><button class="btn secondary" onclick="q('#imp').click()">Importer data</button><input id="imp" type="file" accept=".json" class="hidden" onchange="importData(event)"></div><div class="muted" style="margin-top:7px">Data lagres lokalt på enheten. Ta gjerne eksport innimellom.</div></div>`}
+function w1form(){
+let rows=ex1.map((e,i)=>{let c="";for(let s=0;s<3;s++){if(e.kind==="max"){c+=`<td class="kv">KV</td><td><div class="unitwrap"><input class="edit unitinput" inputmode="numeric" data-e="${i}" data-s="${s}" data-t="r"><span class="unit">stk</span></div></td>`}
+else if(e.kind==="kvreps"){c+=`<td><input class="edit" data-e="${i}" data-s="${s}" data-t="w" value="KV"></td><td><div class="unitwrap"><input class="edit unitinput" inputmode="numeric" data-e="${i}" data-s="${s}" data-t="r" value="6"><span class="unit">stk</span></div></td>`}
+else{c+=`<td><div class="unitwrap"><input class="edit unitinput" inputmode="decimal" data-e="${i}" data-s="${s}" data-t="w"><span class="unit">kg</span></div></td><td><input data-e="${i}" data-s="${s}" data-t="r" value="${e.reps[s]}"></td>`}}
+return `<tr><td><b>${e.name}</b><br><span class="muted">${e.plan}</span></td>${c}</tr>`}).join("");
+return `<div class="card"><h2>Ny Økt 1 – Styrke 1</h2><label>Dato</label><input id="w1date" type="date" value="${today()}"><div class="scroll"><table><tr><th>Øvelse</th><th>S1 vekt</th><th>S1 reps</th><th>S2 vekt</th><th>S2 reps</th><th>S3 vekt</th><th>S3 reps</th></tr>${rows}</table></div><button class="btn" style="margin-top:10px" onclick="saveW1()">Lagre økt</button></div>${history("w1","Tidligere Økt 1")}`}
+function saveW1(){let o={date:q("#w1date").value,ex:{}};ex1.forEach((e,i)=>{let w=[],r=[];for(let s=0;s<3;s++){let W=q(`[data-e="${i}"][data-s="${s}"][data-t="w"]`),R=q(`[data-e="${i}"][data-s="${s}"][data-t="r"]`);w.push(W?(W.value.toUpperCase()==="KV"?"KV":W.value===""?"":Number(W.value.replace(",","."))):"KV");r.push(R?R.value:"")}o.ex[e.name]={w,r}});d.w1.push(o);save();renderPages()}
+function activity(key,title,choices,mins){return `<div class="card"><h2>${title}</h2><label>Dato</label><input id="${key}date" type="date" value="${today()}"><label>Aktivitet</label><select id="${key}type">${choices.map(x=>`<option>${x}</option>`).join("")}</select><label>Tid</label><div class="unitwrap"><input id="${key}time" type="number" value="${mins}"><span class="unit">min</span></div><label>Distanse (valgfritt)</label><div class="unitwrap"><input id="${key}dist" type="number" step="0.1"><span class="unit">km</span></div><label>Kommentar</label><textarea id="${key}com"></textarea><button class="btn" onclick="saveAct('${key}')">Marker som utført</button></div>${history(key,"Tidligere økter")}`}
+function saveAct(k){d[k].push({date:q("#"+k+"date").value,type:q("#"+k+"type").value,time:q("#"+k+"time").value,dist:q("#"+k+"dist").value,com:q("#"+k+"com").value});save();renderPages()}
+function w3form(){let rs=[1,2,3,4].map(r=>`<div class="round"><h3>Runde ${r}</h3><label>Tid på runden</label><input data-rt="${r}" placeholder="f.eks. 03:45">${ex3.map((e,i)=>`<div class="row3"><div><b>${e.name}</b><div class="muted">${e.plan}</div></div>${e.kind==="kv"||e.kind==="max"?`<input class="kv" value="KV" readonly data-r="${r}" data-i="${i}" data-t="w">`:`<div class="unitwrap"><input class="edit unitinput" data-r="${r}" data-i="${i}" data-t="w" inputmode="decimal"><span class="unit">kg</span></div>`}<div class="unitwrap"><input class="${e.kind==="max"?"edit ":""}unitinput" data-r="${r}" data-i="${i}" data-t="rep" value="${e.kind==="max"?"":e.reps}"><span class="unit">stk</span></div></div>`).join("")}</div>`).join("");
+return `<div class="card"><h2>Ny Økt 3 – Styrke 2</h2><div class="muted">Alle øvelser = én runde. Kjør så raskt du klarer, 2 min pause, så neste runde. 4 runder totalt.</div><label>Dato</label><input id="w3date" type="date" value="${today()}">${rs}<label>Total tid inkl. pauser</label><input id="w3tot" placeholder="f.eks. 22:40"><button class="btn" style="margin-top:10px" onclick="saveW3()">Lagre økt</button></div>${history("w3","Tidligere Økt 3")}`}
+function saveW3(){let rounds=[];for(let r=1;r<=4;r++){let E={};ex3.forEach((e,i)=>{let w=q(`[data-r="${r}"][data-i="${i}"][data-t="w"]`).value,rep=q(`[data-r="${r}"][data-i="${i}"][data-t="rep"]`).value;E[e.name]={w:w==="KV"?"KV":w,rep}});rounds.push({time:q(`[data-rt="${r}"]`).value,ex:E})}d.w3.push({date:q("#w3date").value,total:q("#w3tot").value,rounds});save();renderPages()}
+function history(k,title){let arr=d[k]||[];return `<div class="card"><h2>${title}</h2>${arr.slice().reverse().map((x,ri)=>{let idx=arr.length-1-ri,t=k==="w3"?`Total ${x.total||"-"} | ${x.rounds.map(z=>z.time||"-").join(" / ")}`:k==="w1"?"Styrke 1":`${x.type} – ${x.time} min${x.dist?" – "+x.dist+" km":""}`;return `<div class="plan"><span>${x.date}</span><div>${t}</div><button class="btn secondary" onclick="del('${k}',${idx})">Slett</button></div>`}).join("")||'<div class="muted">Ingen registreringer ennå.</div>'}</div>`}
+function del(k,i){if(confirm("Slette registreringen?")){d[k].splice(i,1);save();renderPages()}}
+function exportData(){let b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="treningsdagbok-backup.json";a.click()}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{d=JSON.parse(r.result);save();renderPages();showToast("Importert")}catch(e){alert("Kunne ikke lese filen")}};r.readAsText(f)}
+function renderPages(){renderHome();q("#w1").innerHTML=w1form();q("#w2").innerHTML=activity("w2","Økt 2 – frivillig jogg eller gåtur",["Gåtur","Rolig jogg","Kombinert gå/jogg","Annet"],45);q("#w3").innerHTML=w3form();q("#w4").innerHTML=activity("w4","Økt 4 – fjelltur eller rolig løpetur",["Fjelltur","Rolig løpetur","Gåtur","Annet"],40)}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");["home","w1","w2","w3","w4"].forEach(x=>q("#"+x).classList.add("hidden"));q("#"+b.dataset.p).classList.remove("hidden");scrollTo(0,0)});renderPages();
+</script>
+</body></html>
