@@ -1,0 +1,17 @@
+{
+  "name": "GainTrain",
+  "short_name": "GainTrain",
+  "start_url": "/Treningsdagbok-2.0/",
+  "scope": "/Treningsdagbok-2.0/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#2f5597",
+  "icons": [
+    {
+      "src": "gaintrain-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
