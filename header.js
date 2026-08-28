@@ -148,7 +148,6 @@
       scrollTo(0,0);
     };
 
-    const baseRecentActivity = recentActivity;
     recentActivity = function(){
       let arr=[];
       ['Ivan','Espen'].forEach(name=>{let s=stateByName(name);['w1','w2','w3','w4','w5'].forEach(k=>(s[k]||[]).forEach(x=>arr.push({name,k,date:x.date||'',x,ref:workoutRef(k,x)})))});
@@ -209,4 +208,55 @@
   installHistory();
   installTestWorkout();
   if (typeof currentProfile !== 'undefined' && currentProfile) { renderTabs(); renderPages(); }
+})();
+
+(() => {
+  if (typeof renderHome !== 'function') return;
+
+  const style = document.createElement('style');
+  style.textContent = `
+    .home-test-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .home-test-card{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fafbfe}
+    .home-test-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:7px}
+    .home-test-name{font-size:15px;font-weight:800}.home-test-date{font-size:10px;color:#6b7589}
+    .home-test-row{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid #e7ebf2;font-size:12px}
+    .home-test-row:last-child{border-bottom:0}.home-test-row b{text-align:right}
+    @media(max-width:650px){.home-test-grid{grid-template-columns:1fr}}
+  `;
+  document.head.appendChild(style);
+
+  const latestTest = name => {
+    const s=stateByName(name), arr=s.w5||[];
+    if(!arr.length) return null;
+    return arr.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  };
+
+  const testCard = name => {
+    const x=latestTest(name);
+    if(!x) return `<div class="home-test-card"><div class="home-test-head"><div class="home-test-name">${name}</div></div><div class="muted">Ingen test registrert ennå.</div></div>`;
+    const pulse=x.avgPulse?` <span class="muted">(${esc(x.avgPulse)} bpm)</span>`:'';
+    return `<div class="home-test-card">
+      <div class="home-test-head"><div><div class="home-test-name">${name}</div><div class="home-test-date">${esc(x.date||'-')}</div></div><span class="badge">Test</span></div>
+      <div class="home-test-row"><span>Løp 12 km/t</span><b>${esc(x.runTime||'-')}${pulse}</b></div>
+      <div class="home-test-row"><span>Knebøy over benk</span><b>${x.squats?esc(x.squats)+' stk':'-'}</b></div>
+      <div class="home-test-row"><span>Armhevinger</span><b>${x.pushups?esc(x.pushups)+' stk':'-'}</b></div>
+      <div class="home-test-row"><span>Box jump</span><b>${x.boxJumps?esc(x.boxJumps)+' stk':'-'}</b></div>
+      <div class="home-test-row"><span>Pullups</span><b>${x.pullups?esc(x.pullups)+' stk':'-'}</b></div>
+    </div>`;
+  };
+
+  const baseRenderHome = renderHome;
+  renderHome = function(){
+    baseRenderHome();
+    const home=q('#home');
+    if(!home) return;
+    const block=document.createElement('div');
+    block.className='card';
+    block.innerHTML=`<h2>Testresultater</h2><div class="muted" style="margin-bottom:9px">Siste registrerte test for Ivan og Espen.</div><div class="home-test-grid">${testCard('Ivan')}${testCard('Espen')}</div>`;
+    const cards=home.querySelectorAll('.card');
+    const last=cards[cards.length-1];
+    if(last) last.insertAdjacentElement('beforebegin',block); else home.appendChild(block);
+  };
+
+  if (typeof currentProfile !== 'undefined' && currentProfile && typeof renderPages === 'function') renderPages();
 })();
