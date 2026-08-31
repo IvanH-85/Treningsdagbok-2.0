@@ -71,3 +71,22 @@
 
   applyHeader();renderTabs();if(typeof currentProfile!=='undefined'&&currentProfile)renderPages();
 })();
+
+(() => {
+  if (typeof renderHome !== 'function') return;
+  const s=document.createElement('style');
+  s.textContent=`
+    .week-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.week-card{border:1px solid var(--line);border-radius:12px;padding:11px;background:#fafbfe}.week-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.week-name{font-size:15px;font-weight:800}.week-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid #e7ebf2;font-size:12px}.week-row:last-child{border-bottom:0}.week-ok{font-weight:900;color:#247a3b}.week-wait{font-weight:800;color:#8a6500}.week-complete{margin-top:8px;padding:7px;border-radius:8px;background:#e9f6e9;text-align:center;font-size:12px;font-weight:800}.week-progress{margin-top:8px;height:8px;border-radius:999px;background:#e8edf5;overflow:hidden}.week-progress>span{display:block;height:100%;background:var(--b);border-radius:999px}.week-range{font-size:11px;color:#6b7589;margin-bottom:8px}@media(max-width:650px){.week-grid{grid-template-columns:1fr}}
+  `;
+  document.head.appendChild(s);
+
+  const localYmd=d=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`};
+  const weekBounds=()=>{const now=new Date(),day=(now.getDay()+6)%7,start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-day),end=new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);return{start:localYmd(start),end:localYmd(end)}};
+  const inWeek=(x,b)=>{const dt=x?.date||'';return dt>=b.start&&dt<=b.end};
+  const statusFor=name=>{const state=stateByName(name),b=weekBounds(),strength1=(state.w1||[]).filter(x=>inWeek(x,b)).length,strength2=(state.w3||[]).filter(x=>inWeek(x,b)).length,cardio=[...(state.w2||[]),...(state.w4||[])].filter(x=>inWeek(x,b)).length;return{strength1,strength2,cardio,b}};
+  const mark=(done,text)=>`<span class="${done?'week-ok':'week-wait'}">${done?'✓':'○'} ${text}</span>`;
+  const weekCard=name=>{const x=statusFor(name),done=(x.strength1>0?1:0)+(x.strength2>0?1:0)+Math.min(x.cardio,2),pct=Math.round(done/4*100),complete=done===4;return `<div class="week-card"><div class="week-head"><div class="week-name">${name}</div><span class="badge">${done}/4</span></div><div class="week-row"><span>Styrke 1</span>${mark(x.strength1>0,x.strength1>0?'Gjennomført':'Ikke gjort')}</div><div class="week-row"><span>Styrke 2</span>${mark(x.strength2>0,x.strength2>0?'Gjennomført':'Ikke gjort')}</div><div class="week-row"><span>Kondisjon</span>${mark(x.cardio>=2,`${x.cardio}/2`)}</div><div class="week-progress"><span style="width:${pct}%"></span></div>${complete?'<div class="week-complete">Ukemålet er nådd 💪</div>':''}</div>`};
+  const base=renderHome;
+  renderHome=function(){base();const home=q('#home');if(!home)return;const b=weekBounds(),block=document.createElement('div');block.className='card';block.innerHTML=`<h2>Ukesstatus</h2><div class="week-range">Mål denne uka (${b.start} – ${b.end}): 1 × Styrke 1, 1 × Styrke 2 og 2 × Kondisjon.</div><div class="week-grid">${weekCard('Ivan')}${weekCard('Espen')}</div>`;const cards=home.querySelectorAll('.card');if(cards.length>1)cards[1].insertAdjacentElement('afterend',block);else home.appendChild(block)};
+  if(typeof currentProfile!=='undefined'&&currentProfile&&typeof renderPages==='function')renderPages();
+})();
