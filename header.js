@@ -1,262 +1,73 @@
 (() => {
-  document.title = 'GainTrain';
+  document.title='GainTrain';
 
-  const addMeta = (name, content) => {
-    let el = document.querySelector(`meta[name="${name}"]`);
-    if (!el) {
-      el = document.createElement('meta');
-      el.setAttribute('name', name);
-      document.head.appendChild(el);
-    }
-    el.setAttribute('content', content);
-  };
-  const addLink = (rel, href) => {
-    let el = document.querySelector(`link[rel="${rel}"]`);
-    if (!el) {
-      el = document.createElement('link');
-      el.setAttribute('rel', rel);
-      document.head.appendChild(el);
-    }
-    el.setAttribute('href', href);
-  };
+  const addMeta=(name,content)=>{let el=document.querySelector(`meta[name="${name}"]`);if(!el){el=document.createElement('meta');el.name=name;document.head.appendChild(el)}el.content=content};
+  const addLink=(rel,href)=>{let el=document.querySelector(`link[rel="${rel}"]`);if(!el){el=document.createElement('link');el.rel=rel;document.head.appendChild(el)}el.href=href};
+  addMeta('apple-mobile-web-app-title','GainTrain');addMeta('apple-mobile-web-app-capable','yes');addMeta('mobile-web-app-capable','yes');
+  addLink('manifest','site.webmanifest');addLink('icon','favicon.png');addLink('apple-touch-icon','apple-touch-icon.png');
 
-  addMeta('apple-mobile-web-app-title', 'GainTrain');
-  addMeta('apple-mobile-web-app-capable', 'yes');
-  addMeta('mobile-web-app-capable', 'yes');
-  addLink('manifest', 'site.webmanifest');
-  addLink('icon', 'favicon.png');
-  addLink('apple-touch-icon', 'apple-touch-icon.png');
+  const css=document.createElement('style');css.textContent=`
+    header{padding:8px 12px!important}.headrow{min-height:68px}.brand{gap:12px!important;align-items:center!important}.brandlogo{width:60px!important;height:60px!important;object-fit:contain;flex:0 0 60px!important}.gaintrain-copy{min-width:0}.gaintrain-name{font-size:20px;font-weight:900;line-height:1;color:#fff}.gaintrain-title{font-size:13px;font-weight:700;line-height:1.15;margin-top:3px;color:#fff}.gaintrain-subtitle{font-size:11px;line-height:1.15;margin-top:2px;color:#dce8fb}.gaintrain-copy .who{font-size:10px!important;margin-top:5px!important;color:#fff}
+    .last-workout{border:2px solid var(--b);border-radius:11px;background:#f7faff;padding:11px;margin-top:8px}.last-workout h3{margin:0 0 3px}.lastdate{font-size:11px;color:#6b7589;margin-bottom:8px}.lastrow{padding:4px 0;border-bottom:1px solid #e3e9f2;font-size:12px}.lastrow:last-child{border-bottom:0}.last-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.old-workout{border:1px solid var(--line);border-radius:9px;margin-top:7px;background:#fafbfe;overflow:hidden}.old-workout summary{cursor:pointer;padding:9px 10px;font-size:12px}.old-detail{padding:9px 10px;border-top:1px solid var(--line);font-size:12px;line-height:1.45}
+    .test-intro{background:#eef4ff;border:1px solid #c8d8f2;border-radius:10px;padding:10px;margin:8px 0 12px;font-size:12px;line-height:1.45}.test-block{border:1px solid var(--line);border-radius:10px;padding:11px;margin:10px 0;background:#fafbfe}.test-number{display:inline-flex;width:24px;height:24px;border-radius:50%;align-items:center;justify-content:center;background:var(--b);color:#fff;font-weight:800;margin-right:7px}.test-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.test-result{padding:4px 0;border-bottom:1px solid #e3e9f2;font-size:12px}
+    .home-test-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.home-test-card{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fafbfe}.home-test-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:7px}.home-test-name{font-size:15px;font-weight:800}.home-test-date{font-size:10px;color:#6b7589}.home-test-row{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid #e7ebf2;font-size:12px}.home-test-row:last-child{border-bottom:0}
+    @media(max-width:650px){header{padding:7px 9px!important}.brand{gap:9px!important}.brandlogo{width:52px!important;height:52px!important;flex-basis:52px!important}.gaintrain-name{font-size:18px}.gaintrain-title{font-size:12px}.gaintrain-subtitle{font-size:10px}.headrow>.btn{padding:7px 8px!important;font-size:10px!important}.test-grid,.home-test-grid{grid-template-columns:1fr}}
+  `;document.head.appendChild(css);
 
-  const css = document.createElement('style');
-  css.textContent = `
-    header{padding:8px 12px!important}.headrow{min-height:68px}.brand{gap:12px!important;align-items:center!important}
-    .brandlogo{width:60px!important;height:60px!important;object-fit:contain;flex:0 0 60px!important}.gaintrain-copy{min-width:0}
-    .gaintrain-name{font-size:20px;font-weight:900;line-height:1;color:#fff}.gaintrain-title{font-size:13px;font-weight:700;line-height:1.15;margin-top:3px;color:#fff}
-    .gaintrain-subtitle{font-size:11px;line-height:1.15;margin-top:2px;color:#dce8fb}.gaintrain-copy .who{font-size:10px!important;margin-top:5px!important;color:#fff}
-    .last-workout{border:2px solid var(--b);border-radius:11px;background:#f7faff;padding:11px;margin-top:8px}.last-workout h3{margin:0 0 3px}.last-workout .lastdate{font-size:11px;color:#6b7589;margin-bottom:8px}
-    .last-workout .lastrow{padding:4px 0;border-bottom:1px solid #e3e9f2;font-size:12px}.last-workout .lastrow:last-child{border-bottom:0}.last-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-    .old-workout{border:1px solid var(--line);border-radius:9px;margin-top:7px;background:#fafbfe;overflow:hidden}.old-workout summary{cursor:pointer;padding:9px 10px;font-size:12px}.old-detail{padding:9px 10px;border-top:1px solid var(--line);font-size:12px;line-height:1.45}
-    .test-intro{background:#eef4ff;border:1px solid #c8d8f2;border-radius:10px;padding:10px;margin:8px 0 12px;font-size:12px;line-height:1.45}.test-block{border:1px solid var(--line);border-radius:10px;padding:11px;margin:10px 0;background:#fafbfe}.test-block h3{margin:0 0 4px}.test-number{display:inline-flex;width:24px;height:24px;border-radius:50%;align-items:center;justify-content:center;background:var(--b);color:#fff;font-weight:800;margin-right:7px}.test-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.test-result{padding:4px 0;border-bottom:1px solid #e3e9f2;font-size:12px}
-    @media(max-width:650px){header{padding:7px 9px!important}.brand{gap:9px!important}.brandlogo{width:52px!important;height:52px!important;flex-basis:52px!important}.gaintrain-name{font-size:18px}.gaintrain-title{font-size:12px}.gaintrain-subtitle{font-size:10px}.headrow>.btn{padding:7px 8px!important;font-size:10px!important}.test-grid{grid-template-columns:1fr}}
-  `;
-  document.head.appendChild(css);
+  const applyHeader=()=>{const header=document.querySelector('header'),brand=header?.querySelector('.brand'),who=document.getElementById('who');if(!brand||!who)return;const current=who.textContent;brand.innerHTML='';const logo=document.createElement('img');logo.src='gaintrain-logo.png';logo.alt='GainTrain';logo.className='brandlogo';const copy=document.createElement('div');copy.className='gaintrain-copy';copy.innerHTML=`<div class="gaintrain-name">GainTrain</div><div class="gaintrain-title">Espen og Ivans treningsdagbok</div><div class="gaintrain-subtitle">Oppfølging av Coach Amund</div><div id="who" class="who"></div>`;copy.querySelector('#who').textContent=current;brand.append(logo,copy)};
 
-  const applyHeader = () => {
-    const header = document.querySelector('header');
-    const brand = header?.querySelector('.brand');
-    const who = document.getElementById('who');
-    if (!header || !brand || !who) return;
-    const currentWho = who.textContent;
-    brand.innerHTML = '';
-    const logo = document.createElement('img');
-    logo.src = 'gaintrain-logo.png'; logo.alt = 'GainTrain'; logo.className = 'brandlogo';
-    const copy = document.createElement('div'); copy.className = 'gaintrain-copy';
-    copy.innerHTML = `<div class="gaintrain-name">GainTrain</div><div class="gaintrain-title">Espen og Ivans treningsdagbok</div><div class="gaintrain-subtitle">Oppfølging av Coach Amund</div><div id="who" class="who"></div>`;
-    copy.querySelector('#who').textContent = currentWho;
-    brand.append(logo, copy);
+  const ensureExtraSections=()=>{const app=document.getElementById('appView');if(!app)return;for(const id of ['cardio','w5'])if(!document.getElementById(id)){const s=document.createElement('section');s.id=id;s.className='hidden';app.appendChild(s)}};
+  ensureExtraSections();
+
+  const oldLabel=labelWorkout;
+  labelWorkout=k=>({w1:'Styrke 1',w3:'Styrke 2',w2:'Kondisjon',w4:'Kondisjon',w5:'Testøkt'})[k]||oldLabel(k);
+  const oldShort=shortSummary;
+  shortSummary=(k,x)=>{if(k==='w1')return'Styrke 1';if(k==='w3')return'Styrke 2 • '+(x.total||'-');if(k==='w5')return`Test • ${x.runTime||'-'} på 12 km/t`;if(k==='w2'||k==='w4')return (x.type||'Kondisjon')+(x.time?' – '+x.time+' min':'');return oldShort(k,x)};
+  totalCount=s=>['w1','w2','w3','w4','w5'].reduce((n,k)=>n+(s[k]?.length||0),0);
+  latestWorkout=s=>{let a=[];['w1','w2','w3','w4','w5'].forEach(k=>(s[k]||[]).forEach(x=>a.push({k,date:x.date||'',x})));a.sort((x,y)=>y.date.localeCompare(x.date));return a[0]};
+
+  const cardioEntries=s=>[...(s.w2||[]).map((x,i)=>({k:'w2',i,x})),...(s.w4||[]).map((x,i)=>({k:'w4',i,x}))].sort((a,b)=>(b.x.date||'').localeCompare(a.x.date||''));
+
+  const detail=(k,x)=>{
+    if(k==='w1')return warmupSummary(x)+ex1.map(e=>{const z=x.ex?.[e.name];if(!z)return'';let v;if(e.kind==='max')v=z.r.map(stk).join(' / ');else if(e.kind==='kvreps')v=z.r.map((r,i)=>kg(z.w[i])+' x '+r).join(' / ');else v=z.w.map((w,i)=>kg(w)+' x '+(z.r?.[i]??'-')).join(' / ');return`<div class="lastrow"><b>${e.name}:</b> ${v}</div>`}).join('');
+    if(k==='w3'){const rs=x.rounds||[];return warmupSummary(x)+ex3.map(e=>{if(e.kind==='sharedweight'){const f=rs[0]?.ex?.[e.name],reps=[0,1,2,3].map(i=>rs[i]?.ex?.[e.name]?.rep||'-').join(' / ');return`<div class="lastrow"><b>${e.name}:</b> ${f?kg(f.w):'-'} x ${reps}</div>`}if(e.kind==='max')return`<div class="lastrow"><b>${e.name}:</b> ${[0,1,2,3].map(i=>stk(rs[i]?.ex?.[e.name]?.rep)).join(' / ')}</div>`;return`<div class="lastrow"><b>${e.name}:</b> KV x ${[0,1,2,3].map(i=>rs[i]?.ex?.[e.name]?.rep||'-').join(' / ')}</div>`}).join('')+`<div class="lastrow"><b>Rundetider:</b> ${[0,1,2,3].map(i=>rs[i]?.time||'-').join(' / ')}</div><div class="lastrow"><b>Total tid inkl. pauser:</b> ${x.total||'-'}</div>`}
+    if(k==='w5')return testDetail(x);
+    return`<div class="lastrow"><b>${esc(x.type||'Kondisjon')}</b>${x.time?' – '+esc(x.time)+' min':''}${x.dist?' – '+esc(x.dist)+' km':''}</div>${x.com?`<div class="lastrow"><b>Kommentar:</b> ${esc(x.com)}</div>`:''}`;
   };
 
-  const testDetail = x => {
-    const run = x.runTime || '-';
-    const pulse = x.avgPulse ? ` • snittpuls ${esc(x.avgPulse)}` : '';
-    return `<div class="test-result"><b>Oppvarming:</b> 10 min rolig jogg</div>
-      <div class="test-result"><b>Løpetest 12 km/t:</b> ${esc(run)}${pulse}</div>
-      <div class="test-result"><b>Knebøy over benk, 1 min:</b> ${stk(x.squats)}</div>
-      <div class="test-result"><b>Armhevinger, 1 min:</b> ${stk(x.pushups)}</div>
-      <div class="test-result"><b>Box jump, 1 min:</b> ${stk(x.boxJumps)}</div>
-      <div class="test-result"><b>Pullups, 1 min:</b> ${stk(x.pullups)}</div>
-      ${x.com ? `<div class="test-result"><b>Kommentar:</b> ${esc(x.com)}</div>` : ''}`;
-  };
+  function testDetail(x){const pulse=x.avgPulse?` • snittpuls ${esc(x.avgPulse)} bpm`:'';return`<div class="test-result"><b>Oppvarming:</b> 10 min rolig jogg</div><div class="test-result"><b>Løpetest 12 km/t:</b> ${esc(x.runTime||'-')}${pulse}</div><div class="test-result"><b>Knebøy over benk, 1 min:</b> ${stk(x.squats)}</div><div class="test-result"><b>Armhevinger, 1 min:</b> ${stk(x.pushups)}</div><div class="test-result"><b>Box jump, 1 min:</b> ${stk(x.boxJumps)}</div><div class="test-result"><b>Pullups, 1 min:</b> ${stk(x.pullups)}</div>${x.com?`<div class="test-result"><b>Kommentar:</b> ${esc(x.com)}</div>`:''}`}
 
-  const installHistory = () => {
-    if (typeof ownHistory !== 'function' || typeof labelWorkout !== 'function') return;
+  ownHistory=function(k){const arr=d[k]||[];if(!arr.length)return`<div class="card"><h2>Tidligere ${labelWorkout(k)}</h2><div class="muted">Ingen registreringer ennå.</div></div>`;const latest=arr[arr.length-1],li=arr.length-1,old=arr.slice(0,-1).reverse().map((x,ri)=>{const i=arr.length-2-ri;return`<details class="old-workout"><summary>${esc(x.date||'-')} – ${shortSummary(k,x)}</summary><div class="old-detail">${detail(k,x)}<div class="last-actions"><button class="btn small secondary" onclick="beginEdit('${k}',${i})">Rediger</button><button class="btn small danger" onclick="del('${k}',${i})">Slett</button></div></div></details>`}).join('');return`<div class="card"><h2>Siste ${labelWorkout(k)}</h2><div class="muted">Her ser du hva du gjorde sist mens du registrerer ny økt.</div><div class="last-workout"><h3>${shortSummary(k,latest)}</h3><div class="lastdate">${esc(latest.date||'-')}</div>${detail(k,latest)}<div class="last-actions"><button class="btn small secondary" onclick="beginEdit('${k}',${li})">Rediger</button><button class="btn small danger" onclick="del('${k}',${li})">Slett</button></div></div>${old?`<div style="margin-top:12px"><b>Eldre økter</b>${old}</div>`:''}</div>`};
 
-    const detail = (k,x) => {
-      if (k === 'w1') {
-        return warmupSummary(x) + ex1.map(e => {
-          const z=x.ex?.[e.name]; if(!z) return '';
-          let v='-';
-          if(e.kind==='max') v=z.r.map(stk).join(' / ');
-          else if(e.kind==='kvreps') v=z.r.map((r,i)=>kg(z.w[i])+' x '+r).join(' / ');
-          else v=z.w.map((w,i)=>kg(w)+' x '+(z.r?.[i]??'-')).join(' / ');
-          return `<div class="lastrow"><b>${e.name}:</b> ${v}</div>`;
-        }).join('');
-      }
-      if (k === 'w3') {
-        const rs=x.rounds||[];
-        return warmupSummary(x)+ex3.map(e=>{
-          if(e.kind==='sharedweight'){
-            const first=rs[0]?.ex?.[e.name];
-            const reps=[0,1,2,3].map(i=>rs[i]?.ex?.[e.name]?.rep||'-').join(' / ');
-            return `<div class="lastrow"><b>${e.name}:</b> ${first?kg(first.w):'-'} x ${reps}</div>`;
-          }
-          if(e.kind==='max') return `<div class="lastrow"><b>${e.name}:</b> ${[0,1,2,3].map(i=>stk(rs[i]?.ex?.[e.name]?.rep)).join(' / ')}</div>`;
-          return `<div class="lastrow"><b>${e.name}:</b> KV x ${[0,1,2,3].map(i=>rs[i]?.ex?.[e.name]?.rep||'-').join(' / ')}</div>`;
-        }).join('')+`<div class="lastrow"><b>Rundetider:</b> ${[0,1,2,3].map(i=>rs[i]?.time||'-').join(' / ')}</div><div class="lastrow"><b>Total tid inkl. pauser:</b> ${x.total||'-'}</div>`;
-      }
-      if (k === 'w5') return testDetail(x);
-      return `<div class="lastrow"><b>${esc(x.type||'Aktivitet')}</b>${x.time?' – '+esc(x.time)+' min':''}${x.dist?' – '+esc(x.dist)+' km':''}</div>${x.com?`<div class="lastrow">${esc(x.com)}</div>`:''}`;
-    };
+  renderTabs=function(){const a=[['home','Start'],['ivan','Ivan'],['espen','Espen']];if(!isCoach())a.push(['w1','Styrke 1'],['w3','Styrke 2'],['cardio','Kondisjon'],['w5','Test']);q('#tabs').innerHTML=a.map((x,i)=>`<button class="tab ${i===0?'active':''}" data-p="${x[0]}">${x[1]}</button>`).join('');q('#tabs').querySelectorAll('.tab').forEach(b=>b.onclick=()=>showPage(b.dataset.p))};
+  showPage=function(p){q('#tabs').querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));['home','ivan','espen','w1','w2','w3','w4','cardio','w5'].forEach(x=>q('#'+x)?.classList.toggle('hidden',x!==p));scrollTo(0,0)};
 
-    ownHistory = function(k){
-      const arr=d[k]||[];
-      if(!arr.length) return `<div class="card"><h2>Tidligere ${labelWorkout(k)}</h2><div class="muted">Ingen registreringer ennå.</div></div>`;
-      const latest=arr[arr.length-1], latestIdx=arr.length-1;
-      const old=arr.slice(0,-1).reverse().map((x,ri)=>{
-        const idx=arr.length-2-ri;
-        return `<details class="old-workout"><summary>${esc(x.date||'-')} – ${shortSummary(k,x)}</summary><div class="old-detail">${detail(k,x)}<div class="last-actions"><button class="btn small secondary" onclick="beginEdit('${k}',${idx})">Rediger</button><button class="btn small danger" onclick="del('${k}',${idx})">Slett</button></div></div></details>`;
-      }).join('');
-      return `<div class="card"><h2>Siste ${labelWorkout(k)}</h2><div class="muted" style="margin-bottom:6px">Her ser du hva du gjorde sist mens du registrerer ny økt.</div><div class="last-workout"><h3>${shortSummary(k,latest)}</h3><div class="lastdate">${esc(latest.date||'-')}</div>${detail(k,latest)}<div class="last-actions"><button class="btn small secondary" onclick="beginEdit('${k}',${latestIdx})">Rediger</button><button class="btn small danger" onclick="del('${k}',${latestIdx})">Slett</button></div></div>${old?`<div style="margin-top:12px"><b>Eldre økter</b>${old}</div>`:''}</div>`;
-    };
-  };
+  personSummary=function(name){const s=stateByName(name),last=latestWorkout(s),cardio=cardioEntries(s).length;return`<div class="personcard click" onclick="showPage('${name.toLowerCase()}')"><h3>${name}</h3><div class="stats"><div class="stat"><b>${totalCount(s)}</b><span class="muted">økter</span></div><div class="stat"><b>${s.w1?.length||0}</b><span class="muted">Styrke 1</span></div><div class="stat"><b>${s.w3?.length||0}</b><span class="muted">Styrke 2</span></div><div class="stat"><b>${cardio}</b><span class="muted">Kondisjon</span></div></div><div class="muted" style="margin-top:8px">Sist trent: ${last?.date||'-'}</div></div>`};
 
-  const installTestWorkout = () => {
-    const appView = document.getElementById('appView');
-    if (!appView || typeof renderPages !== 'function') return;
-    if (!document.getElementById('w5')) {
-      const s=document.createElement('section'); s.id='w5'; s.className='hidden'; appView.appendChild(s);
-    }
+  recentActivity=function(){let arr=[];['Ivan','Espen'].forEach(name=>{const s=stateByName(name);['w1','w2','w3','w4','w5'].forEach(k=>(s[k]||[]).forEach(x=>arr.push({name,k,date:x.date||'',x,ref:workoutRef(k,x)})))});arr.sort((a,b)=>b.date.localeCompare(a.date));return arr.slice(0,8).map(a=>`<div class="plan clickable" onclick="openRecent('${a.name}','${a.k}','${a.ref}')"><span class="badge">${a.name}</span><div><b>${labelWorkout(a.k)}</b><div class="muted">${shortSummary(a.k,a.x)}</div></div><span>${a.date}</span></div>`).join('')||'<div class="muted">Ingen registreringer ennå.</div>'};
 
-    const baseLabelWorkout = labelWorkout;
-    labelWorkout = k => k === 'w5' ? 'Testøkt' : baseLabelWorkout(k);
+  const latestTest=name=>{const a=stateByName(name).w5||[];return a.slice().sort((x,y)=>(y.date||'').localeCompare(x.date||''))[0]};
+  const testCard=name=>{const x=latestTest(name);if(!x)return`<div class="home-test-card"><div class="home-test-name">${name}</div><div class="muted">Ingen test registrert ennå.</div></div>`;return`<div class="home-test-card"><div class="home-test-head"><div><div class="home-test-name">${name}</div><div class="home-test-date">${esc(x.date||'-')}</div></div><span class="badge">Test</span></div><div class="home-test-row"><span>Løp 12 km/t</span><b>${esc(x.runTime||'-')}${x.avgPulse?` (${esc(x.avgPulse)} bpm)`:''}</b></div><div class="home-test-row"><span>Knebøy</span><b>${x.squats?esc(x.squats)+' stk':'-'}</b></div><div class="home-test-row"><span>Armhevinger</span><b>${x.pushups?esc(x.pushups)+' stk':'-'}</b></div><div class="home-test-row"><span>Box jump</span><b>${x.boxJumps?esc(x.boxJumps)+' stk':'-'}</b></div><div class="home-test-row"><span>Pullups</span><b>${x.pullups?esc(x.pullups)+' stk':'-'}</b></div></div>`};
+  renderHome=function(){const coach=isCoach()?'<div class="card"><b>Coach-visning</b><div class="muted" style="margin-top:5px">Velg Ivan eller Espen for detaljer og kommentarer.</div></div>':'';q('#home').innerHTML=`${coach}<div class="card"><h2>Felles oversikt</h2><div class="muted" style="margin-bottom:10px">Styrke og kondisjon for Ivan og Espen.</div><div class="people">${personSummary('Ivan')}${personSummary('Espen')}</div></div><div class="card"><h2>Testresultater</h2><div class="home-test-grid">${testCard('Ivan')}${testCard('Espen')}</div></div><div class="card"><h2>Siste aktivitet</h2><div class="muted" style="margin-bottom:6px">Trykk på en aktivitet for å åpne økten.</div>${recentActivity()}</div>`};
 
-    const baseShortSummary = shortSummary;
-    shortSummary = (k,x) => k === 'w5' ? `Test • ${x.runTime || '-'} på 12 km/t` : baseShortSummary(k,x);
+  const baseWorkoutCard=workoutCard;
+  workoutCard=function(name,p,k,x,index){if(k!=='w5')return baseWorkoutCard(name,p,k,x,index);const ref=workoutRef(k,x),domId=workoutDomId(name,k,x),cs=comments.filter(c=>c.workout_owner_id===p?.id&&c.workout_ref===ref),edit=isOwnName(name)&&!isCoach()?`<div class="workactions"><button class="btn small secondary" onclick="beginEdit('w5',${index})">Rediger økt</button></div>`:'';return`<div id="${domId}" class="workout"><div class="workhead"><div><b>Testøkt – ${name}</b><div class="muted">${x.date||'-'}</div></div><span class="badge">${shortSummary('w5',x)}</span></div><div style="margin-top:8px">${testDetail(x)}</div>${edit}${commentThread(cs,p?.id,ref,k,x.date)}<div class="commentbox"><label>Ny kommentar</label><textarea id="comment_${ref}" placeholder="Skriv kommentar til denne testen"></textarea><button class="btn small" onclick="addComment('${p?.id}','${ref}','${k}','${x.date}')">Legg inn kommentar</button></div></div>`};
 
-    const baseTotalCount = totalCount;
-    totalCount = s => baseTotalCount(s) + (s.w5?.length || 0);
+  const combinedPersonCard=(name,p,e)=>workoutCard(name,p,e.k,e.x,e.i);
+  renderPerson=function(name){const s=stateByName(name),p=profileByName(name),cardio=cardioEntries(s);let html=`<div class="card"><h2>${name}</h2><div class="stats"><div class="stat"><b>${totalCount(s)}</b><span class="muted">totalt</span></div><div class="stat"><b>${s.w1?.length||0}</b><span class="muted">Styrke 1</span></div><div class="stat"><b>${s.w3?.length||0}</b><span class="muted">Styrke 2</span></div><div class="stat"><b>${cardio.length}</b><span class="muted">Kondisjon</span></div></div></div><div class="card"><h2>Styrke 1 – progresjon</h2><div class="hist"><div class="h">Øvelse</div><div class="h">Første</div><div class="h">Nå</div></div>${progressHtml(s)}</div><div class="card"><h2>Styrke 2 – progresjon</h2>${w3ProgressHtml(s)}</div>`;html+=historyForPerson(name,'w1',s.w1||[]);html+=historyForPerson(name,'w3',s.w3||[]);html+=`<div class="card"><h2>Kondisjon – historikk</h2>${cardio.map(e=>combinedPersonCard(name,p,e)).join('')||'<div class="muted">Ingen kondisjonsøkter ennå.</div>'}</div>`;html+=historyForPerson(name,'w5',s.w5||[]);q('#'+name.toLowerCase()).innerHTML=html};
 
-    const baseLatestWorkout = latestWorkout;
-    latestWorkout = s => {
-      const a=baseLatestWorkout(s), t=(s.w5||[]).map(x=>({k:'w5',date:x.date||'',x})).sort((a,b)=>b.date.localeCompare(a.date))[0];
-      if(!a) return t; if(!t) return a; return t.date > a.date ? t : a;
-    };
+  const cardioChoices=['Gåtur','Rolig jogg','Kombinert gå/jogg','Fjelltur','Intervall','Mølle','Sykkel','Romaskin','Annet'];
+  const cardioEdit=()=>editTarget&&(editTarget.k==='w2'||editTarget.k==='w4')?d[editTarget.k]?.[editTarget.i]:null;
+  window.beginCardioEdit=(k,i)=>{editTarget={k,i};renderPages();showPage('cardio')};
+  window.cardioForm=()=>{const ed=cardioEdit();return`${ed?`<div class="card editing"><b>Redigerer kondisjonsøkt</b><button class="btn small secondary" style="margin-top:8px" onclick="cancelEdit();showPage('cardio')">Avbryt</button></div>`:''}<div class="card ${ed?'editing':''}"><h2>${ed?'Rediger':'Ny'} Kondisjonsøkt – ${currentProfile.name}</h2><div class="muted">Registrer den kondisjonsøkten du faktisk gjør. Ekstraøkter kan legges inn på samme måte.</div><label>Dato</label><input id="cdate" type="date" value="${ed?.date||today()}"><label>Aktivitet</label><select id="ctype">${cardioChoices.map(x=>`<option ${ed?.type===x?'selected':''}>${x}</option>`).join('')}</select><label>Tid</label><div class="unitwrap"><input id="ctime" type="number" value="${ed?.time??''}"><span class="unit">min</span></div><label>Distanse (valgfritt)</label><div class="unitwrap"><input id="cdist" type="number" step="0.1" value="${ed?.dist??''}"><span class="unit">km</span></div><label>Kommentar</label><textarea id="ccom">${esc(ed?.com??'')}</textarea><button class="btn" onclick="saveCardio()">${ed?'Oppdater økt':'Lagre kondisjonsøkt'}</button></div>`};
+  window.saveCardio=async()=>{const ed=cardioEdit(),o={_id:ed?ed._id||workoutRef(editTarget.k,ed):uid(),date:q('#cdate').value,type:q('#ctype').value,time:q('#ctime').value,dist:q('#cdist').value,com:q('#ccom').value};if(ed){d[editTarget.k][editTarget.i]=o;editTarget=null;await save('Kondisjonsøkten er oppdatert')}else{d.w2=d.w2||[];d.w2.push(o);await save('Kondisjonsøkt lagret');showCongrats()}showPage('cardio')};
+  const cardioHistory=()=>{const a=cardioEntries(d);if(!a.length)return'<div class="card"><h2>Tidligere kondisjon</h2><div class="muted">Ingen kondisjonsøkter ennå.</div></div>';return`<div class="card"><h2>Tidligere kondisjon</h2>${a.map((e,n)=>`<details class="old-workout" ${n===0?'open':''}><summary>${esc(e.x.date||'-')} – ${shortSummary(e.k,e.x)}</summary><div class="old-detail">${detail(e.k,e.x)}<div class="last-actions"><button class="btn small secondary" onclick="beginCardioEdit('${e.k}',${e.i})">Rediger</button><button class="btn small danger" onclick="del('${e.k}',${e.i});setTimeout(()=>showPage('cardio'),0)">Slett</button></div></div></details>`).join('')}</div>`};
 
-    const baseRenderTabs = renderTabs;
-    renderTabs = function(){
-      baseRenderTabs();
-      if(isCoach()) return;
-      const tabs=q('#tabs');
-      if(tabs && !tabs.querySelector('[data-p="w5"]')){
-        const b=document.createElement('button'); b.className='tab'; b.dataset.p='w5'; b.textContent='Test'; b.onclick=()=>showPage('w5'); tabs.appendChild(b);
-      }
-    };
+  window.testForm=()=>{d.w5=d.w5||[];const ed=currentEdit('w5');return`${editBanner('w5')}<div class="card ${ed?'editing':''}"><h2>${ed?'Rediger':'Ny'} Testøkt – ${currentProfile.name}</h2><div class="test-intro"><b>Oppvarming:</b> 10 min rolig jogg.<br>På løpetesten settes mølla på 12 km/t. Klarer du 2:00, stopper du der og registrerer gjennomsnittspulsen.</div><label>Dato</label><input id="w5date" type="date" value="${ed?.date||today()}"><div class="test-block"><h3><span class="test-number">1</span>Løpetest – 12 km/t</h3><label>Tid</label><input id="w5run" value="${esc(ed?.runTime??'')}" placeholder="f.eks. 01:34 eller 02:00"><label>Gjennomsnittspuls hvis 2:00</label><div class="unitwrap"><input id="w5pulse" type="number" value="${esc(ed?.avgPulse??'')}"><span class="unit">bpm</span></div></div>${[['2','Knebøy over benk','w5squats','squats'],['3','Armhevinger','w5pushups','pushups'],['4','Box jump','w5box','boxJumps'],['5','Pullups','w5pullups','pullups']].map(a=>`<div class="test-block"><h3><span class="test-number">${a[0]}</span>${a[1]}</h3><label>Antall på 1 min</label><div class="unitwrap"><input id="${a[2]}" type="number" value="${esc(ed?.[a[3]]??'')}"><span class="unit">stk</span></div></div>`).join('')}<label>Kommentar</label><textarea id="w5com">${esc(ed?.com??'')}</textarea><button class="btn" onclick="saveW5()">${ed?'Oppdater test':'Lagre test'}</button></div>`};
+  window.saveW5=async()=>{d.w5=d.w5||[];const ed=currentEdit('w5'),o={_id:ed?ed._id||workoutRef('w5',ed):uid(),date:q('#w5date').value,runTime:q('#w5run').value.trim(),avgPulse:q('#w5pulse').value,squats:q('#w5squats').value,pushups:q('#w5pushups').value,boxJumps:q('#w5box').value,pullups:q('#w5pullups').value,com:q('#w5com').value};if(ed){d.w5[editTarget.i]=o;editTarget=null;await save('Testen er oppdatert')}else{d.w5.push(o);await save('Test lagret');showCongrats()}showPage('w5')};
 
-    showPage = function(p){
-      q('#tabs').querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
-      ['home','ivan','espen','w1','w2','w3','w4','w5'].forEach(x=>q('#'+x)?.classList.toggle('hidden',x!==p));
-      scrollTo(0,0);
-    };
+  const baseRenderPages=renderPages;
+  renderPages=function(){d.w5=d.w5||[];baseRenderPages();renderHome();renderPerson('Ivan');renderPerson('Espen');if(!isCoach()){q('#w1').innerHTML=w1form()+ownHistory('w1');q('#w3').innerHTML=w3form()+ownHistory('w3');q('#cardio').innerHTML=cardioForm()+cardioHistory();q('#w5').innerHTML=testForm()+ownHistory('w5')}setTimeout(updateW3Total,0)};
 
-    recentActivity = function(){
-      let arr=[];
-      ['Ivan','Espen'].forEach(name=>{let s=stateByName(name);['w1','w2','w3','w4','w5'].forEach(k=>(s[k]||[]).forEach(x=>arr.push({name,k,date:x.date||'',x,ref:workoutRef(k,x)})))});
-      arr.sort((a,b)=>b.date.localeCompare(a.date));
-      return arr.slice(0,8).map(a=>`<div class="plan clickable" onclick="openRecent('${a.name}','${a.k}','${a.ref}')"><span class="badge">${a.name}</span><div><b>${labelWorkout(a.k)}</b><div class="muted">${shortSummary(a.k,a.x)}</div></div><span>${a.date}</span></div>`).join('')||'<div class="muted">Ingen registreringer ennå.</div>';
-    };
-
-    const baseWorkoutCard = workoutCard;
-    workoutCard = function(name,p,k,x,index){
-      if(k!=='w5') return baseWorkoutCard(name,p,k,x,index);
-      let ref=workoutRef(k,x),domId=workoutDomId(name,k,x),cs=comments.filter(c=>c.workout_owner_id===p?.id&&c.workout_ref===ref);
-      let edit=isOwnName(name)&&!isCoach()?`<div class="workactions"><button class="btn small secondary" onclick="beginEdit('w5',${index})">Rediger økt</button></div>`:'';
-      return `<div id="${domId}" class="workout"><div class="workhead"><div><b>Testøkt – ${name}</b><div class="muted">${x.date||'-'}</div></div><span class="badge">${shortSummary('w5',x)}</span></div><div style="margin-top:8px">${testDetail(x)}</div>${edit}${commentThread(cs,p?.id,ref,k,x.date)}<div class="commentbox"><label>Ny kommentar</label><textarea id="comment_${ref}" placeholder="Skriv kommentar til denne testen"></textarea><button class="btn small" onclick="addComment('${p?.id}','${ref}','${k}','${x.date}')">Legg inn kommentar</button></div></div>`;
-    };
-
-    const baseRenderPerson = renderPerson;
-    renderPerson = function(name){
-      baseRenderPerson(name);
-      const s=stateByName(name);
-      const target=q('#'+name.toLowerCase());
-      if(target) target.insertAdjacentHTML('beforeend', historyForPerson(name,'w5',s.w5||[]));
-    };
-
-    window.testForm = function(){
-      if(!d.w5) d.w5=[];
-      const ed=currentEdit('w5');
-      return `${editBanner('w5')}<div class="card ${ed?'editing':''}"><h2>${ed?'Rediger':'Ny'} Testøkt – ${currentProfile.name}</h2>
-        <div class="test-intro"><b>Oppvarming:</b> 10 min rolig jogg.<br>Deretter gjennomføres testene under. På løpetesten settes mølla på 12 km/t. Klarer du 2:00, stopper du der og registrerer gjennomsnittspulsen.</div>
-        <label>Dato</label><input id="w5date" type="date" value="${ed?.date||today()}">
-        <div class="test-block"><h3><span class="test-number">1</span>Løpetest – 12 km/t</h3><div class="muted">Løp så lenge du klarer, maks 2:00.</div><div class="test-grid"><div><label>Tid</label><input id="w5run" value="${esc(ed?.runTime??'')}" placeholder="f.eks. 01:34 eller 02:00"></div><div><label>Gjennomsnittspuls hvis 2:00</label><div class="unitwrap"><input id="w5pulse" type="number" value="${esc(ed?.avgPulse??'')}"><span class="unit">bpm</span></div></div></div></div>
-        <div class="test-block"><h3><span class="test-number">2</span>Knebøy over benk</h3><div class="muted">Uten vekt. Tell hvor mange du klarer på 1 min.</div><label>Antall</label><div class="unitwrap"><input id="w5squats" type="number" value="${esc(ed?.squats??'')}"><span class="unit">stk</span></div></div>
-        <div class="test-block"><h3><span class="test-number">3</span>Armhevinger</h3><div class="muted">Maks antall på 1 min.</div><label>Antall</label><div class="unitwrap"><input id="w5pushups" type="number" value="${esc(ed?.pushups??'')}"><span class="unit">stk</span></div></div>
-        <div class="test-block"><h3><span class="test-number">4</span>Box jump</h3><div class="muted">Tell hvor mange ganger du hopper opp og ned av box/benk på 1 min.</div><label>Antall</label><div class="unitwrap"><input id="w5box" type="number" value="${esc(ed?.boxJumps??'')}"><span class="unit">stk</span></div></div>
-        <div class="test-block"><h3><span class="test-number">5</span>Pullups</h3><div class="muted">Maks antall på 1 min.</div><label>Antall</label><div class="unitwrap"><input id="w5pullups" type="number" value="${esc(ed?.pullups??'')}"><span class="unit">stk</span></div></div>
-        <label>Kommentar</label><textarea id="w5com" placeholder="Valgfri kommentar">${esc(ed?.com??'')}</textarea>
-        <button class="btn" onclick="saveW5()">${ed?'Oppdater test':'Lagre test'}</button></div>`;
-    };
-
-    window.saveW5 = async function(){
-      if(!d.w5) d.w5=[];
-      const ed=currentEdit('w5'),old=ed?workoutRef('w5',ed):null;
-      const o={_id:ed?ed._id||old:uid(),date:q('#w5date').value,runTime:q('#w5run').value.trim(),avgPulse:q('#w5pulse').value,squats:q('#w5squats').value,pushups:q('#w5pushups').value,boxJumps:q('#w5box').value,pullups:q('#w5pullups').value,com:q('#w5com').value};
-      if(ed){d.w5[editTarget.i]=o;editTarget=null;await save('Testen er oppdatert')}else{d.w5.push(o);await save('Test lagret');showCongrats()}
-      showPage('w5');
-    };
-
-    const baseRenderPages = renderPages;
-    renderPages = function(){
-      if(d && !d.w5) d.w5=[];
-      baseRenderPages();
-      if(!isCoach()) q('#w5').innerHTML=testForm()+ownHistory('w5');
-    };
-
-    if(d && !d.w5) d.w5=[];
-  };
-
-  applyHeader();
-  installHistory();
-  installTestWorkout();
-  if (typeof currentProfile !== 'undefined' && currentProfile) { renderTabs(); renderPages(); }
-})();
-
-(() => {
-  if (typeof renderHome !== 'function') return;
-
-  const style = document.createElement('style');
-  style.textContent = `
-    .home-test-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .home-test-card{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fafbfe}
-    .home-test-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:7px}
-    .home-test-name{font-size:15px;font-weight:800}.home-test-date{font-size:10px;color:#6b7589}
-    .home-test-row{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid #e7ebf2;font-size:12px}
-    .home-test-row:last-child{border-bottom:0}.home-test-row b{text-align:right}
-    @media(max-width:650px){.home-test-grid{grid-template-columns:1fr}}
-  `;
-  document.head.appendChild(style);
-
-  const latestTest = name => {
-    const s=stateByName(name), arr=s.w5||[];
-    if(!arr.length) return null;
-    return arr.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
-  };
-
-  const testCard = name => {
-    const x=latestTest(name);
-    if(!x) return `<div class="home-test-card"><div class="home-test-head"><div class="home-test-name">${name}</div></div><div class="muted">Ingen test registrert ennå.</div></div>`;
-    const pulse=x.avgPulse?` <span class="muted">(${esc(x.avgPulse)} bpm)</span>`:'';
-    return `<div class="home-test-card">
-      <div class="home-test-head"><div><div class="home-test-name">${name}</div><div class="home-test-date">${esc(x.date||'-')}</div></div><span class="badge">Test</span></div>
-      <div class="home-test-row"><span>Løp 12 km/t</span><b>${esc(x.runTime||'-')}${pulse}</b></div>
-      <div class="home-test-row"><span>Knebøy over benk</span><b>${x.squats?esc(x.squats)+' stk':'-'}</b></div>
-      <div class="home-test-row"><span>Armhevinger</span><b>${x.pushups?esc(x.pushups)+' stk':'-'}</b></div>
-      <div class="home-test-row"><span>Box jump</span><b>${x.boxJumps?esc(x.boxJumps)+' stk':'-'}</b></div>
-      <div class="home-test-row"><span>Pullups</span><b>${x.pullups?esc(x.pullups)+' stk':'-'}</b></div>
-    </div>`;
-  };
-
-  const baseRenderHome = renderHome;
-  renderHome = function(){
-    baseRenderHome();
-    const home=q('#home');
-    if(!home) return;
-    const block=document.createElement('div');
-    block.className='card';
-    block.innerHTML=`<h2>Testresultater</h2><div class="muted" style="margin-bottom:9px">Siste registrerte test for Ivan og Espen.</div><div class="home-test-grid">${testCard('Ivan')}${testCard('Espen')}</div>`;
-    const cards=home.querySelectorAll('.card');
-    const last=cards[cards.length-1];
-    if(last) last.insertAdjacentElement('beforebegin',block); else home.appendChild(block);
-  };
-
-  if (typeof currentProfile !== 'undefined' && currentProfile && typeof renderPages === 'function') renderPages();
+  applyHeader();renderTabs();if(typeof currentProfile!=='undefined'&&currentProfile)renderPages();
 })();
