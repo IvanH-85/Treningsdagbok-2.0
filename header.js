@@ -14,6 +14,8 @@
       await loadScript('challenge.js?v=20260903');
       await loadScript('coach-preview.js?v=20260903');
       await loadScript('profile-enhancements.js?v=20260903');
+      await loadScript('pb-workout.js?v=20260903b');
+      await loadScript('coach-challenge-tab.js?v=20260903b');
     }catch(e){
       console.error('Kunne ikke laste GainTrain-moduler',e);
     }
