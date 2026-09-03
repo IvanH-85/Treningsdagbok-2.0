@@ -13,6 +13,7 @@
       await loadScript('ui-core.js?v=20260903');
       await loadScript('challenge.js?v=20260903');
       await loadScript('coach-preview.js?v=20260903');
+      await loadScript('profile-enhancements.js?v=20260903');
     }catch(e){
       console.error('Kunne ikke laste GainTrain-moduler',e);
     }
