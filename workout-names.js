@@ -1,9 +1,11 @@
 (() => {
   const replacements = [
     ['Styrke 1-økter','Styrke økt-økter'],
-    ['Styrke 2-økter','Styrke løft-økter'],
+    ['Styrke 2-økter','Sirkeløkt-økter'],
+    ['Styrke løft-økter','Sirkeløkt-økter'],
     ['Styrke 1','Styrke økt'],
-    ['Styrke 2','Styrke løft']
+    ['Styrke 2','Sirkeløkt'],
+    ['Styrke løft','Sirkeløkt']
   ];
 
   const renameText = text => {
@@ -48,12 +50,12 @@
 
   if (typeof labelWorkout === 'function') {
     const baseLabelWorkout = labelWorkout;
-    labelWorkout = k => k === 'w1' ? 'Styrke økt' : k === 'w3' ? 'Styrke løft' : baseLabelWorkout(k);
+    labelWorkout = k => k === 'w1' ? 'Styrke økt' : k === 'w3' ? 'Sirkeløkt' : baseLabelWorkout(k);
   }
 
   if (typeof shortSummary === 'function') {
     const baseShortSummary = shortSummary;
-    shortSummary = (k,x) => k === 'w1' ? 'Styrke økt' : k === 'w3' ? 'Styrke løft • ' + (x?.total || '-') : baseShortSummary(k,x);
+    shortSummary = (k,x) => k === 'w1' ? 'Styrke økt' : k === 'w3' ? 'Sirkeløkt • ' + (x?.total || '-') : baseShortSummary(k,x);
   }
 
   processNode(document.body);
