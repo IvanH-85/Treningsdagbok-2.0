@@ -10,7 +10,7 @@
     .gtcal-event{font-size:9px;line-height:1.2;padding:3px 4px;border-radius:6px;margin-top:3px;background:#f1f4f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}.gtcal-event.done{background:#e9f6e9}.gtcal-event.plan{background:#eef4ff}
     .gtcal-challenge{grid-row:1;background:#fff2cc;border:1px solid #e1c45f;border-radius:7px;padding:5px 7px;font-size:10px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;z-index:3;transition:.12s;min-height:28px;display:flex;align-items:center}.gtcal-challenge:active{transform:scale(.99)}
     .gtcal-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.gtcal-form{margin-top:10px;border-top:1px solid #e5e9f0;padding-top:10px}.gtcal-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gtcal-empty{font-size:11px;color:#6b7589}
-    .gtcal-modal{position:fixed;inset:0;background:#10182faa;z-index:110;display:flex;align-items:center;justify-content:center;padding:18px}.gtcal-modalbox{background:#fff;border-radius:18px;padding:18px;max-width:380px;width:100%;box-shadow:0 18px 55px #0005;max-height:80vh;overflow:auto}.gtcal-modalbox h2,.gtcal-modalbox h3{margin-top:0;margin-right:38px}.gtcal-close{float:right;border:0;background:#eef2f8;border-radius:999px;width:34px;height:34px;font-size:20px;font-weight:900;cursor:pointer}.gtcal-detail-item{font-size:13px;padding:8px 0;border-bottom:1px solid #e7ebf2}.gtcal-detail-item:last-child{border-bottom:0}.gtcal-chinfo{margin-top:9px;padding:9px;border-radius:8px;background:#fff7db;font-size:12px}
+    .gtcal-modal{position:fixed;inset:0;background:#10182faa;z-index:110;display:flex;align-items:center;justify-content:center;padding:18px}.gtcal-modalbox{background:#fff;border-radius:18px;padding:18px;max-width:380px;width:100%;box-shadow:0 18px 55px #0005;max-height:80vh;overflow:auto}.gtcal-modalbox h2,.gtcal-modalbox h3{margin-top:0;margin-right:38px}.gtcal-close{float:right;border:0;background:#eef2f8;border-radius:999px;width:34px;height:34px;font-size:20px;font-weight:900;cursor:pointer}.gtcal-detail-item{font-size:13px;padding:8px 0;border-bottom:1px solid #e7ebf2}.gtcal-detail-item:last-child{border-bottom:0}.gtcal-detail-item.workout{cursor:pointer;border-radius:8px;padding-left:6px;padding-right:6px}.gtcal-detail-item.workout:active{background:#eef4ff}.gtcal-chinfo{margin-top:9px;padding:9px;border-radius:8px;background:#fff7db;font-size:12px}
     @media(max-width:650px){.gtcal-grid,.gtcal-week{grid-template-columns:28px repeat(7,minmax(0,1fr))}.gtcal-rowdays{grid-column:2/-1}.gtcal-day{min-height:70px;padding:4px}.gtcal-event{font-size:8px;padding:2px 3px}.gtcal-title{min-width:110px;font-size:13px}.gtcal-form-grid{grid-template-columns:1fr}.gtcal-challenge{font-size:9px;min-height:24px}.gtcal-weekno{font-size:8px}}
   `;
   document.head.appendChild(style);
@@ -46,11 +46,16 @@
     return {ch,start,end};
   });
 
+  window.openCalendarWorkout=(name,k,ref)=>{
+    document.getElementById('gtcalModal')?.remove();
+    setTimeout(()=>{if(typeof openRecent==='function')openRecent(name,k,ref)},30);
+  };
+
   const detailHtml=date=>{
     const ws=workoutsForDate(date),ps=allPlans().filter(p=>(p.date||p.planned_date)===date),chs=challengesCache.filter(ch=>ch.start_date<=date&&ch.end_date>=date);
     let html=`<h3>${fromYmd(date).toLocaleDateString('no-NO',{weekday:'long',day:'numeric',month:'long'})}</h3>`;
     if(!ws.length&&!ps.length&&!chs.length)html+='<div class="gtcal-empty">Ingenting registrert denne dagen.</div>';
-    ws.forEach(w=>html+=`<div class="gtcal-detail-item">${workoutIcon(w.k)} <b>${esc(w.name)}</b> – ${esc(workoutShort(w.k))}</div>`);
+    ws.forEach(w=>{const ref=typeof workoutRef==='function'?workoutRef(w.k,w.x):'';html+=`<div class="gtcal-detail-item workout" role="button" tabindex="0" onclick="openCalendarWorkout('${w.name}','${w.k}','${ref}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCalendarWorkout('${w.name}','${w.k}','${ref}')} ">${workoutIcon(w.k)} <b>${esc(w.name)}</b> – ${esc(workoutShort(w.k))}<span style="float:right">›</span></div>`});
     ps.forEach(p=>html+=`<div class="gtcal-detail-item">${planIcon(p.type||p.workout_type)} <b>${esc(p.assignee||p._owner)}</b> – ${esc(p.type||p.workout_type||'Planlagt økt')}${p.note?`<div class="muted">${esc(p.note)}</div>`:''}${p._owner===currentProfile?.name&&!isCoach()?`<button class="replylink" onclick="deletePlannedWorkout('${p._owner}',${p._index});document.getElementById('gtcalModal')?.remove()">Slett plan</button>`:''}</div>`);
     chs.forEach(ch=>html+=`<div class="gtcal-chinfo" onclick="openCalendarChallenge(${ch.id})" style="cursor:pointer">🎯 <b>${esc(ch.title)}</b><div class="muted">${esc(ch.start_date)} – ${esc(ch.end_date)}${ch.reward?' • Premie: '+esc(ch.reward):''}</div></div>`);
     return html;
