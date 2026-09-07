@@ -20,6 +20,7 @@
       await loadScript('fun-updates.js?v=20260905');
       await loadScript('brag-balance.js?v=20260905');
       await loadScript('training-calendar.js?v=20260907d');
+      await loadScript('espen-login-greeting.js?v=20260907');
     }catch(e){
       console.error('Kunne ikke laste GainTrain-moduler',e);
     }
