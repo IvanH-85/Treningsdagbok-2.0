@@ -16,7 +16,14 @@
     .espen-preview-banner{margin:10px auto 0;max-width:1100px;padding:9px 12px;border:1px solid #8fb0df;border-radius:10px;background:#eef4ff;font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
     .espen-preview-banner b{font-weight:900}.espen-preview-banner .muted{font-size:11px}
     body.espen-preview-active #appView button:not(.tab),body.espen-preview-active #appView input,body.espen-preview-active #appView select,body.espen-preview-active #appView textarea{pointer-events:none;opacity:.62}
-    @media(max-width:650px){.espen-preview-btn{font-size:9px!important;padding:6px 7px!important}.espen-preview-banner{margin:7px 8px 0;align-items:flex-start;flex-direction:column}}
+    @media(max-width:650px){
+      header .headrow{flex-wrap:wrap!important}
+      header .brand{flex:1 1 52%!important}
+      header #logoutBtn{order:2}
+      header #coachPreviewBtn{order:3;flex:1 1 auto}
+      header #espenPreviewBtn{order:4;flex:1 1 100%;width:100%;font-size:10px!important;padding:8px 10px!important}
+      .espen-preview-banner{margin:7px 8px 0;align-items:flex-start;flex-direction:column}
+    }
   `;
   document.head.appendChild(style);
 
@@ -37,7 +44,9 @@
       btn.id='espenPreviewBtn';
       btn.className='btn small secondary espen-preview-btn';
       btn.onclick=()=>window.toggleEspenPreview();
-      headrow.appendChild(btn);
+      const coachBtn=document.getElementById('coachPreviewBtn');
+      if(coachBtn?.parentNode===headrow) coachBtn.insertAdjacentElement('afterend',btn);
+      else headrow.appendChild(btn);
     }
     btn.textContent=previewEspen?'Tilbake til Ivan':'Vis som Espen';
 
