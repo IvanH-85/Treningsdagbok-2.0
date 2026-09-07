@@ -23,6 +23,7 @@
       await loadScript('espen-login-greeting.js?v=20260907');
       await loadScript('workout-names.js?v=20260907b');
       await loadScript('next-workout.js?v=20260907');
+      await loadScript('espen-preview.js?v=20260907');
     }catch(e){
       console.error('Kunne ikke laste GainTrain-moduler',e);
     }
