@@ -41,7 +41,7 @@
 
   const rebalance=()=>{
     const card=document.getElementById('bragCard'); if(!card)return;
-    const picks=['Ivan','Espen'].map(name=>pbEventsFor(name)[0]).filter(Boolean);
+    const picks=['Ivan','Espen'].map(name=>pbEventsFor(name)[0]).filter(Boolean).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
     const head=card.querySelector('.brag-head')?.outerHTML||'<div class="brag-head"><h2>Skryteluka 🥳</h2><span class="badge">PB</span></div>';
     card.innerHTML=head+(picks.length?picks.map(e=>`<div class="brag-item"><div class="brag-text">${esc(bragText(e))}</div><div class="brag-date">${esc(e.date)} • ${esc(e.value)}</div></div>`).join(''):'<div class="muted">Ingen ferske PB-er å skryte av akkurat nå. Det kommer 😎</div>');
   };
