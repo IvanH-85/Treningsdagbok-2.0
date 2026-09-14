@@ -25,6 +25,7 @@
       await loadScript('next-workout.js?v=20260907');
       await loadScript('espen-preview.js?v=20260907b');
       await loadScript('progression-best.js?v=20260908b');
+      await loadScript('challenge-status-history.js?v=20260914');
     }catch(e){
       console.error('Kunne ikke laste GainTrain-moduler',e);
     }
