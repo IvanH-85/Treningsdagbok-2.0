@@ -81,7 +81,7 @@
     <label>Hva står på spill?</label><input id="wagerStake" placeholder="En kaffe / proteinbar">
     <button class="btn small" onclick="window.wagerCreate()">Opprett veddemål</button></div></details>
     <details><summary><b>🧾 Registrer avtalt gjeld manuelt</b></summary><div class="wager-form">
-    <label>Hvem skylder?</label><select id="wagerManualDebtor">${opts(coach()?['Ivan','Espen','Amund']:[actor()])}</select>
+    <label>Hvem skylder?</label><select id="wagerManualDebtor">${opts(coach()?['Ivan','Espen','Amund']:[actor(),'Amund'])}</select>
     <label>Hvem får?</label><select id="wagerManualCreditor">${opts(['Ivan','Espen','Amund'])}</select>
     <label>Hva skyldes?</label><input id="wagerManualWhat" placeholder="Kaffe, proteinbar eller annen tullepremie">
     <label>Hvorfor?</label><input id="wagerManualWhy" placeholder="Frivillig avtale">
@@ -149,7 +149,7 @@
   window.wagerManual=async()=>{
     if(!canWrite())return;
     const debtor=get('wagerManualDebtor'),creditor=get('wagerManualCreditor'),description=get('wagerManualWhat'),reason=get('wagerManualWhy');
-    if(!description||debtor===creditor||(!coach()&&debtor!==actor()))return alert('Velg to ulike personer og skriv hva som skyldes.');
+    if(!description||debtor===creditor||(!coach()&&debtor!==actor()&&!(debtor==='Amund'&&creditor===actor())))return alert('Velg to ulike personer og skriv hva som skyldes. Som utøver kan du registrere egen gjeld eller en avtalt premie fra Amund til deg.');
     const r=await sb.from('fun_penalties').insert({debtor,creditor,description,reason,created_by:currentUser.id});
     if(!problem(r))await refresh();
   };
