@@ -28,7 +28,6 @@
       await loadScript('challenge-status-history.js?v=20260914');
       await loadScript('gaintrain-fun.js?v=20260921');
       await loadScript('straffekassa.js?v=20260921');
-      await loadScript('action-theme.js?v=20260921a');
     }catch(e){
       console.error('Kunne ikke laste GainTrain-moduler',e);
     }
