@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#2f5597">
 <title>Espen og Ivans treningsdagbok for oppfølging av Coach Amund</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="header.js?v=20260921-action2" defer></script>
+  <script src="header.js?v=20260921-action3" defer></script>
   <script src="action-theme.js?v=20260921b" defer></script>
 <style>
 :root{--b:#2f5597;--lb:#d9e2f3;--y:#fff2cc;--gr:#e7e6e6;--line:#c8d2e2;--bg:#f5f7fb;--ok:#e2f0d9;--reply:#f4f6fa}
@@ -25,6 +25,13 @@ table{border-collapse:collapse;width:100%;min-width:650px;font-size:12px}th,td{b
 </head>
 <body>
 <header><div class="headrow"><div class="brand"><img src="gaintrain-logo.svg" class="brandlogo" alt="GainTrain"><div><h1>Espen og Ivans treningsdagbok for oppfølging av Coach Amund</h1><div id="who" class="who">Ikke innlogget</div></div></div><button id="logoutBtn" class="btn small secondary hidden" onclick="logout()">Logg ut</button></div></header>
+<div id="gaintrainThemeRow" style="display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;margin:0 auto 8px;max-width:900px">
+  <span class="gt-theme-label" style="font-size:11px;font-weight:900">VELG DRAKT</span>
+  <div class="gt-theme-buttons" role="group" aria-label="Velg GainTrain-tema" style="display:flex;gap:5px;padding:4px;border-radius:12px;background:#eef2f8">
+    <button type="button" class="gt-theme-btn" data-theme="classic" aria-pressed="true" onclick="setGainTrainTheme('classic')" style="border:0;border-radius:9px;padding:9px 13px;cursor:pointer;font-weight:900">CLASSIC</button>
+    <button type="button" class="gt-theme-btn" data-theme="action" aria-pressed="false" onclick="setGainTrainTheme('action')" style="border:0;border-radius:9px;padding:9px 13px;cursor:pointer;font-weight:900">🔥 ACTION</button>
+  </div>
+</div>
 <div class="wrap">
 <div id="authView" class="auth"><div class="card"><h2>Logg inn</h2><div class="muted">Ivan og Espen registrerer trening. Amund har Coach-tilgang for oppfølging og kommentarer.</div><label>Bruker</label><div class="person"><button id="authIvan" class="active" onclick="chooseName('Ivan')">Ivan</button><button id="authEspen" onclick="chooseName('Espen')">Espen</button><button id="authAmund" onclick="chooseName('Amund')">Amund</button></div><label>E-post</label><input id="email" type="email" autocomplete="email"><label>Passord</label><input id="password" type="password" autocomplete="current-password" minlength="6"><div class="actions"><button class="btn" onclick="login()">Logg inn</button><button class="btn secondary" onclick="signup()">Opprett bruker</button></div><div id="authMsg" class="muted" style="margin-top:10px"></div></div></div>
 <div id="appView" class="hidden"><div id="tabs" class="tabs"></div><section id="home"></section><section id="ivan" class="hidden"></section><section id="espen" class="hidden"></section><section id="w1" class="hidden"></section><section id="w2" class="hidden"></section><section id="w3" class="hidden"></section><section id="w4" class="hidden"></section></div>
