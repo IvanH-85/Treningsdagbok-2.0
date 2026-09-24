@@ -17,8 +17,8 @@
       await loadScript('pb-workout.js?v=20260924a');
       await loadScript('coach-challenge-tab.js?v=20260903b');
       await loadScript('coach-activity-alert.js?v=20260905');
-      await loadScript('fun-updates.js?v=20260924a');
-      await loadScript('brag-balance.js?v=20260924a');
+      await loadScript('fun-updates.js?v=20260924b');
+      await loadScript('brag-balance.js?v=20260924b');
       await loadScript('training-calendar.js?v=20260907d');
       await loadScript('espen-login-greeting.js?v=20260907');
       await loadScript('workout-names.js?v=20260907b');
