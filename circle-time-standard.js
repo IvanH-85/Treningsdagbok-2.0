@@ -63,8 +63,9 @@
   const circleDetails=x=>{
     const rs=x.rounds||[];
     const times=[0,1,2,3].map(i=>rs[i]?.time||'-').join(' / ');
-    return warmupSummary(x)+`<div class="lastrow"><b>Rundetider:</b> ${times}</div><div class="lastrow"><b>Total tid inkl. pauser:</b> ${e(x.total||'-')}</div><div class="circle-fixed-line"><b>Fast oppsett:</b> ${fixedLine}</div>`+
-      (!standardMatch(x)?'<div class="muted">Eldre økt: registrert med annet oppsett. Tidene inngår ikke i ny sammenlignbar PB.</div>':'');
+    const oldLine='Sandbag '+e(x.rounds?.[0]?.ex?.['Sandbag to shoulder']?.w??'-')+' kg · Armhevinger '+e(x.rounds?.[0]?.ex?.Armheving?.rep??'-')+' stk · Ground to air '+e(x.rounds?.[0]?.ex?.['Ground to air']?.w??'-')+' kg';
+    return warmupSummary(x)+`<div class="lastrow"><b>Rundetider:</b> ${times}</div><div class="lastrow"><b>Total tid inkl. pauser:</b> ${e(x.total||'-')}</div><div class="circle-fixed-line"><b>${standardMatch(x)?'Fast oppsett:':'Registrert oppsett:'}</b> ${standardMatch(x)?fixedLine:oldLine}</div>`+
+      (!standardMatch(x)?'<div class="muted">Eldre økt med annet oppsett – bevart i historikken, men ikke med i ny PB-sammenligning.</div>':'');
   };
   const originalWorkoutCard=workoutCard;
   workoutCard=function(name,p,k,x,index){
