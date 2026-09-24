@@ -33,6 +33,8 @@
     } finally {
       try { await loadScript('action-theme-v2.js?v=20260921-v2b'); }
       catch(e) { console.error('Kunne ikke laste Action Mode v2',e); }
+      try { await loadScript('circle-time-standard.js?v=20260924b'); }
+      catch(e) { console.error('Kunne ikke laste fast sirkeløkt',e); }
     }
   })();
 })();
