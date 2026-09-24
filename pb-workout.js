@@ -35,9 +35,9 @@
 
   const markW3=(name,s)=>{
     const latest=latestByDate(s.w3||[]); if(!latest)return;
-    const old=olderThan(s.w3||[],latest); if(!old.length)return;
+    const old=olderThan(s.w3||[],latest).filter(x=>window.gaintrainCircleStandardMatch?.(x)); if(!old.length||!window.gaintrainCircleStandardMatch?.(latest.x))return;
     const root=document.getElementById(workoutDomId(name,'w3',latest.x));
-    const checks=[['Sandbag to shoulder','sb','high'],['Ground to air','gta','high'],['Armheving','push','high'],['Total tid inkl. pauser','total','low']];
+    const checks=[['Total tid inkl. pauser','total','low']];
     checks.forEach(([label,key,dir])=>{const v=w3Metric(latest.x,key),vals=old.map(x=>w3Metric(x,key)).filter(x=>x!=null&&x>0);if(!vals.length||v==null||v<=0)return;const pb=dir==='low'?v<Math.min(...vals):v>Math.max(...vals);if(pb)addToLine(root,label)});
   };
 
