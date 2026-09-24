@@ -67,6 +67,27 @@
     return warmupSummary(x)+`<div class="lastrow"><b>Rundetider:</b> ${times}</div><div class="lastrow"><b>Total tid inkl. pauser:</b> ${e(x.total||'-')}</div><div class="circle-fixed-line"><b>${standardMatch(x)?'Fast oppsett:':'Registrert oppsett:'}</b> ${standardMatch(x)?fixedLine:oldLine}</div>`+
       (!standardMatch(x)?'<div class="muted">Eldre økt med annet oppsett – bevart i historikken, men ikke med i ny PB-sammenligning.</div>':'');
   };
+  const previousOwnHistory=ownHistory;
+  ownHistory=function(k){
+    if(k!=='w3')return previousOwnHistory(k);
+    const arr=d.w3||[];
+    if(!arr.length)return '<div class="card"><h2>Tidligere Sirkeløkt</h2><div class="muted">Ingen registreringer ennå.</div></div>';
+    const latest=arr[arr.length-1],li=arr.length-1;
+    const older=arr.slice(0,-1).reverse().map((x,ri)=>{
+      const index=arr.length-2-ri;
+      return `<details class="old-workout"><summary>${e(x.date||'-')} – Sirkeløkt • ${e(x.total||'-')}</summary>
+        <div class="old-detail">${circleDetails(x)}<div class="last-actions">
+        <button class="btn small secondary" onclick="beginEdit('w3',${index})">Rediger</button>
+        <button class="btn small danger" onclick="del('w3',${index})">Slett</button></div></div></details>`;
+    }).join('');
+    return `<div class="card"><h2>Siste Sirkeløkt</h2>
+      <div class="muted">Rundetider og fast belastning – siste registrering.</div>
+      <div class="last-workout"><h3>Sirkeløkt • ${e(latest.total||'-')}</h3>
+      <div class="lastdate">${e(latest.date||'-')}</div>${circleDetails(latest)}
+      <div class="last-actions"><button class="btn small secondary" onclick="beginEdit('w3',${li})">Rediger</button>
+      <button class="btn small danger" onclick="del('w3',${li})">Slett</button></div></div>
+      ${older?'<div style="margin-top:12px"><b>Eldre økter</b>'+older+'</div>':''}</div>`;
+  };
   const originalWorkoutCard=workoutCard;
   workoutCard=function(name,p,k,x,index){
     const html=originalWorkoutCard(name,p,k,x,index);
