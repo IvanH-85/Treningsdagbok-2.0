@@ -14,11 +14,11 @@
       await loadScript('challenge.js?v=20260903');
       await loadScript('coach-preview.js?v=20260903');
       await loadScript('profile-enhancements.js?v=20260903');
-      await loadScript('pb-workout.js?v=20260903b');
+      await loadScript('pb-workout.js?v=20260924a');
       await loadScript('coach-challenge-tab.js?v=20260903b');
       await loadScript('coach-activity-alert.js?v=20260905');
-      await loadScript('fun-updates.js?v=20260905');
-      await loadScript('brag-balance.js?v=20260908');
+      await loadScript('fun-updates.js?v=20260924a');
+      await loadScript('brag-balance.js?v=20260924a');
       await loadScript('training-calendar.js?v=20260907d');
       await loadScript('espen-login-greeting.js?v=20260907');
       await loadScript('workout-names.js?v=20260907b');
@@ -31,9 +31,9 @@
     }catch(e){
       console.error('Kunne ikke laste GainTrain-moduler',e);
     } finally {
-      try { await loadScript('action-theme-v2.js?v=20260921-v2b'); }
+      try { await loadScript('action-theme-v2.js?v=20260924a'); }
       catch(e) { console.error('Kunne ikke laste Action Mode v2',e); }
-      try { await loadScript('circle-time-standard.js?v=20260924b'); }
+      try { await loadScript('circle-time-standard.js?v=20260924c'); }
       catch(e) { console.error('Kunne ikke laste fast sirkeløkt',e); }
     }
   })();
