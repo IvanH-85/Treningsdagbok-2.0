@@ -29,7 +29,7 @@
     body.gt-action .circle-standard,body.gt-action .circle-fixed-line{background:#303d4e;color:#edf4ff;border-color:#64758c}
     body.gt-action .circle-standard strong{color:#ffbf77}
   `;document.head.appendChild(css);
-  const e=window.esc||((s)=>String(s??''));
+  const e=s=>esc(s);
   w3form=function(){
     const ed=currentEdit('w3');
     const rounds=[1,2,3,4].map(r=>`<div class="round"><h3>Runde ${r}</h3><label for="circleTime${r}">Tid på runden</label><input id="circleTime${r}" data-rt="${r}" inputmode="text" value="${e(ed?.rounds?.[r-1]?.time??'')}" placeholder="f.eks. 03:45" oninput="updateW3Total()"></div>`).join('');
@@ -60,7 +60,6 @@
     else{d.w3.push(data);await save();showCongrats();}
     showPage('w3');
   };
-  const originalOwnHistory=ownHistory;
   const circleDetails=x=>{
     const rs=x.rounds||[];
     const times=[0,1,2,3].map(i=>rs[i]?.time||'-').join(' / ');
@@ -71,16 +70,35 @@
   workoutCard=function(name,p,k,x,index){
     const html=originalWorkoutCard(name,p,k,x,index);
     if(k!=='w3')return html;
-    // The original is a full card, with comments and actions; replace only the exercise detail area.
-    const start=html.indexOf('<div style="margin-top:8px">');
-    const end=start<0?-1:html.indexOf('<div class="workactions">',start);
-    if(start<0)return html;
-    // Only use this strategy if the expected detail block can be located reliably.
-    const marker='<div class="commentbox">';
-    const commentAt=html.indexOf(marker,start);
-    const footer=end>=0&&end<commentAt?end:commentAt;
-    if(footer<0)return html;
-    return html.slice(0,start)+'<div style="margin-top:8px">'+circleDetails(x)+'</div>'+html.slice(footer);
+    const template=document.createElement('template');template.innerHTML=html;
+    const body=template.content.querySelector('.workout > div[style="margin-top:8px"]');
+    if(body)body.innerHTML=circleDetails(x);
+    return template.innerHTML;
+  };
+  const previousRenderPerson=renderPerson;
+  renderPerson=function(name){
+    const out=previousRenderPerson(name);
+    setTimeout(()=>{
+      const page=document.getElementById(name.toLowerCase());if(!page)return;
+      const card=[...page.querySelectorAll(':scope > .card')].find(el=>/Sirkeløkt – progresjon/i.test(el.querySelector('h2')?.textContent||''));
+      const all=stateByName(name)?.w3||[];
+      const valid=all.filter(standardMatch).slice().sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+      const times=[['Runde 1',x=>x.rounds?.[0]?.time],['Runde 2',x=>x.rounds?.[1]?.time],
+        ['Runde 3',x=>x.rounds?.[2]?.time],['Runde 4',x=>x.rounds?.[3]?.time],
+        ['Total tid inkl. pauser',x=>x.total]];
+      const rows=valid.length?times.map(([title,get])=>{
+        const first=get(valid[0])||'-';
+        const nums=valid.map(x=>({raw:get(x),s:timeToSeconds(get(x))})).filter(v=>v.s!=null&&v.s>0);
+        const best=nums.length?nums.reduce((a,b)=>a.s<=b.s?a:b).raw:'-';
+        return '<div><b>'+title+'</b></div><div>'+e(first)+'</div><div><b>'+e(best)+'</b></div>';
+      }).join(''):'<div class="muted" style="grid-column:1/-1">Ingen økter med fast oppsett registrert ennå.</div>';
+      if(card)card.innerHTML='<h2>Sirkeløkt – progresjon</h2><div class="muted" style="margin-bottom:7px">PB gjelder korteste tid med samme faste oppsett. Eldre økter med andre vekter eller reps er bevart i historikken.</div><div class="circle-fixed-line"><b>Fast oppsett:</b> '+fixedLine+'</div><div class="hist"><div class="h">Tid</div><div class="h">Første</div><div class="h">PB</div>'+rows+'</div>';
+      // Remove any legacy PB badges for fixed-load exercises. Time PB remains on total time.
+      page.querySelectorAll('.workout .pb').forEach(tag=>{
+        if(tag.closest('.workout')?.textContent?.includes('Rundetider:')&&!tag.parentElement?.textContent?.includes('Total tid inkl. pauser:'))tag.remove();
+      });
+    },40);
+    return out;
   };
   // The latest workout and older own-history summaries are still rendered by the existing app.
   if(currentProfile){renderPages();renderPerson('Ivan');renderPerson('Espen');}
