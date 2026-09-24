@@ -130,6 +130,7 @@
     const latest=pools.flatMap(([k,arr])=>arr.map((x,i)=>({k,x,i,arr}))).sort((a,b)=>(b.x.date||'').localeCompare(a.x.date||'')||b.i-a.i)[0];
     if(!latest||latest.arr.length<2)return false;
     const {k,x,arr,i}=latest,old=arr.filter((_,ix)=>ix!==i);
+    if(k==='w3'&&!window.gaintrainCircleStandardMatch?.(x))return false;
     if(k==='w1')return ex1.some(e=>{
       const z=x.ex?.[e.name];if(!z)return false;
       const metric=y=>{const t=y.ex?.[e.name];if(!t)return 0;
@@ -141,7 +142,7 @@
       const metric=(y,key)=>key==='total'?secs(y.total):
         key==='push'?Math.max(0,...(y.rounds||[]).map(r=>num(r.ex?.Armheving?.rep))):
         num(y.rounds?.[0]?.ex?.[key]?.w);
-      return ['Sandbag to shoulder','Ground to air','push','total'].some(key=>{
+      return ['total'].some(key=>{
         const v=metric(x,key),previous=old.map(y=>metric(y,key)).filter(n=>n!=null&&n>0);
         return v!=null&&v>0&&previous.length&&
           (key==='total'?v<Math.min(...previous):v>Math.max(...previous));
