@@ -27,7 +27,7 @@
     const s=stateByName(name),events=[];
     const a1=sorted(s.w1||[]),best1={};
     a1.forEach(({x})=>ex1.forEach(e=>{const v=w1Value(x,e);if(!v)return;const prev=best1[e.name];if(prev!=null&&v.score>prev)events.push({name,date:x.date||'',label:e.name,value:v.display,dir:'high'});best1[e.name]=Math.max(prev??-Infinity,v.score)}));
-    const a3=sorted(s.w3||[]).filter(x=>typeof window.gaintrainCircleStandardMatch==='function'&&window.gaintrainCircleStandardMatch(x)),keys=[['Runde 1',0],['Runde 2',1],['Runde 3',2],['Runde 4',3],['Total tid','total']],best3={};
+    const a3=sorted(s.w3||[]).filter(({x})=>typeof window.gaintrainCircleStandardMatch==='function'&&window.gaintrainCircleStandardMatch(x)),keys=[['Runde 1',0],['Runde 2',1],['Runde 3',2],['Runde 4',3],['Total tid','total']],best3={};
     a3.forEach(({x})=>keys.forEach(([label,key])=>{const display=key==='total'?x.total:x.rounds?.[key]?.time;const score=sec(display);if(!score||score<=0)return;const prev=best3[key];if(prev!=null&&score<prev)events.push({name,date:x.date||'',label,value:display,dir:'low'});best3[key]=prev==null?score:Math.min(prev,score)}));
     const a5=sorted(s.w5||[]),tests=[['Løpetest 12 km/t','runTime'],['Knebøy','squats'],['Armhevinger','pushups'],['Box jump','boxJumps'],['Pullups','pullups']],best5={};
     a5.forEach(({x})=>tests.forEach(([label,key])=>{const v=testValue(x,key);if(!v)return;const prev=best5[key];if(prev!=null&&v.score>prev)events.push({name,date:x.date||'',label,value:v.display,dir:'high'});best5[key]=Math.max(prev??-Infinity,v.score)}));
